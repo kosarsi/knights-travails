@@ -14,18 +14,19 @@ function knightMoves(square1, square2) {
         for (let i = 0; i < len; i++) {
             let square = queue.shift(); 
             let children = getPossibleMoves(square); 
-            let keyFormParent = square[0] * 10 + square[1];
+            let keyFormParent = square[0] + "," + square[1];
             for (let child of children) {
                 if (!hasVisited(visitedSquares, child)) {
                     visitedSquares.push(child); 
                     queue.push(child);
-                    let keyForm = child[0] * 10 + child[1];  
+                    let keyForm = child[0] + "," + child[1];  
                     parentMap.set(keyForm, keyFormParent);
+                    if (child[0] == square2[0] && child[1] == square2[1]) {
+                        reconstructPath(square1[0] + "," + square1[1], square2[0] + "," + square2[1], parentMap); 
+                        return moves;
+                    }
                 }
-                if (child[0] == square2[0] && child[1] == square2[1]) {
-                    reconstructPath(square1[0] * 10 + square1[1], square2[0] * 10 + square2[1], parentMap); 
-                    return moves;
-                }
+                
             }
         }
     }
@@ -95,14 +96,15 @@ function reconstructPath(start, end, map) {
     while (true) {
         let parent = map.get(square); 
         path.push(parent);
+        square = parent; 
         if (parent == start) {
             break;
         }
     }
     for (let i = path.length - 1; i >= 0; i--) {
         let num = path[i];
-        console.log([Math.floor(num / 10), num % 10]);
+        console.log(num);
     }
 }
 
-console.log(knightMoves([3, 3], [4, 3]));
+console.log(knightMoves([7, 7], [0, 0]));
